@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>DevOps Bootcamp App</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <h1>Welcome to the DevOps Bootcamp App</h1>
+    {% if error %}
+    <p style="color:red; font-weight:bold;">{{ error }}</p>
+    {% endif %}
+
+
+    
+    <form method="POST">
+        <input type="text" name="name" placeholder="Your Name" required>
+        <input type="email" name="email" placeholder="Your Email" required>
+        <textarea name="bio" placeholder="Your Bio"></textarea>
+        <button type="submit">Submit</button>
+    </form>
+<h2>Add Post</h2>
+<form method="POST" action="{{ url_for('main.add_post') }}">
+    <input type="text" name="title" placeholder="Post Title" required>
+    <textarea name="content" placeholder="Post Content" required></textarea>
+    <select name="user_id" required>
+        <option value="">Select User</option>
+        {% for user in users %}
+            <option value="{{ user.id }}">{{ user.name }}</option>
+        {% endfor %}
+    </select>
+    <button type="submit">Add Post</button>
+</form>
+    <h2>Registered Users</h2>
+    <ul>
+        {% for user in users %}
+            <li>{{ user.name }} ({{ user.email }})</li>
+            {% if user.bio %}
+                <br><em>{{ user.bio }}</em>
+            {% endif %}
+        {% endfor %}
+    </ul>
+
+<h2>Posts</h2>
+<ul>
+    {% for post in posts %}
+        <li>
+            <strong>{{ post.title }}</strong> by 
+            {% if post.user %}{{ post.user.name }}{% else %}Unknown{% endif %}<br>
+            {{ post.content }}<br>
+            <small>Posted at: {{ post.timestamp.strftime('%Y-%m-%d %H:%M:%S') }}</small>
+        </li>
+    {% else %}
+        <li>No posts yet.</li>
+    {% endfor %}
+</ul>
+</body>
+</html>
